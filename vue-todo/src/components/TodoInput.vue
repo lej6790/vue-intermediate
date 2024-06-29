@@ -1,6 +1,6 @@
 <template>
   <div class="inputBox shadow">
-    <input type="text" v-model="newTodoItem" v-on:keyup.enter="addTodo">
+    <input type="text" v-model="newTodoItem" v-on:keyup.enter="addTodo" />
     <span class="addContainer" v-on:click="addTodo">
       <i class="fa-solid fa-plus addBtn"></i>
     </span>
@@ -9,23 +9,25 @@
 
 <script>
 export default {
-  data: function() {
+  data: function () {
     return {
-      newTodoItem: ""
+      newTodoItem: "",
     };
   },
   methods: {
-    addTodo: function() {
-      console.log(this.newTodoItem);
-      // 저장하는 로직
-      localStorage.setItem(this.newTodoItem, this.newTodoItem)
-      this.clearInput();
+    addTodo: function () {
+      if (this.newTodoItem !== "") {
+        var obj = { completed: false, item: this.newTodoItem };
+        // 저장하는 로직
+        localStorage.setItem(this.newTodoItem, JSON.stringify(obj));
+        this.clearInput();
+      }
     },
-    clearInput: function() {
-      this.newTodoItem = '';
-    }
-  }
-}
+    clearInput: function () {
+      this.newTodoItem = "";
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -44,7 +46,7 @@ input:focus {
 }
 .addContainer {
   float: right;
-  background: linear-gradient(to right, #6478FB, #8763FB);
+  background: linear-gradient(to right, #6478fb, #8763fb);
   display: block;
   width: 3rem;
   border-radius: 0 5px 5px 0;

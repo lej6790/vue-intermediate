@@ -1,8 +1,15 @@
 <template>
   <div>
     <ul>
-      <li v-for="(todoItem, index) in todoItems" v-bind:key="todoItem" >
-        {{ todoItem }}
+      <li v-for="(todoItem, index) in todoItems" v-bind:key="todoItem.item">
+        <i
+          class="checkBtn fa-solid fa-check"
+          v-bind:class="{ checkBtnCompleted: todoItem.completed }"
+          v-on:click="toggleComplete(todoItem, index)"
+        ></i>
+        <span v-bind:class="{ textCompleted: todoItem.completed }">{{
+          todoItem.item
+        }}</span>
         <span class="removeBtn" v-on:click="removeTodo(todoItem, index)">
           <i class="fa-solid fa-trash-can"></i>
         </span>
@@ -13,32 +20,40 @@
 
 <script>
 export default {
-  data: function() {
+  data: function () {
     return {
-      todoItems: []
+      todoItems: [],
     };
   },
   methods: {
-    removeTodo: function(todoItem, index) {
+    removeTodo: function (todoItem, index) {
       console.log(todoItem, index);
       localStorage.removeItem(todoItem);
       this.todoItems.splice(index, 1);
-    }
+    },
+    toggleComplete: function (todoItem, index) {
+      console.log(index);
+      todoItem.completed = !todoItem.completed;
+      localStorage.removeItem(todoItem.item);
+      localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
+    },
   },
-  created: function() {
-    if(localStorage.length > 0) {
-      for(var i = 0; i < localStorage.length; i++) {
-        if(localStorage.key(i) !== 'loglevel:webpack-dev-server') {
-          this.todoItems.push(localStorage.key(i));
+  created: function () {
+    if (localStorage.length > 0) {
+      for (var i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i) !== "loglevel:webpack-dev-server") {
+          this.todoItems.push(
+            JSON.parse(localStorage.getItem(localStorage.key(i)))
+          );
+          // this.todoItems.push(localStorage.key(i));
         }
-        // console.log(localStorage.key(i));
       }
     }
-  }
-}
+  },
+};
 </script>
 
-<style>
+<style scoped>
 ul {
   list-style-type: none;
   padding-left: 0px;
