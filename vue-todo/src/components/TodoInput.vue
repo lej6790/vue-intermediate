@@ -4,14 +4,32 @@
         <span class="addContainer" v-on:click="addTodo">
             <i class="fa-solid fa-plus addBtn"></i>
         </span>
+
+        <Teleport to="body">
+        <!-- use the modal component, pass in the prop -->
+            <ModalView :show="showModal">
+                <template #header>
+                    <h3>
+                        경고!
+                        <i class="closeModalBtn fa-solid fa-square-xmark" @click="showModal = false"></i>
+                    </h3>
+                </template>
+                <template #body>
+                    <div>아무것도 입력하지 않으셨습니다.</div>
+                </template>
+            </ModalView>
+        </Teleport>
     </div>
 </template>
 
 <script>
+import ModalView from './common/ModalView.vue'
+
 export default {
     data() {
         return {
-            newTodoItem: ""
+            newTodoItem: "",
+            showModal: false
         };
     },
     methods: {
@@ -19,11 +37,16 @@ export default {
             if (this.newTodoItem !== '') {
                 this.$emit('addTodoItem', this.newTodoItem);
                 this.clearInput();
+            } else {
+                this.showModal = !this.showModal;
             }
         },
         clearInput() {
             this.newTodoItem = '';
         }
+    },
+    components: {
+        ModalView
     }
 }
 </script>
@@ -52,5 +75,8 @@ input:focus {
 .addBtn {
     color: white;
     vertical-align: middle;
+}
+.closeModalBtn {
+    color: #42b983;
 }
 </style>
